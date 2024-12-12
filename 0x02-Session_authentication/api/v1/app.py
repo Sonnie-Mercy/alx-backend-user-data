@@ -20,6 +20,7 @@ if auth_type == "basic_auth":
 elif auth_type == "session_auth":
     auth = SessionAuth()
 
+
 @app.before_request
 def before_request():
     """
@@ -35,7 +36,8 @@ def before_request():
     if not auth.require_auth(request.path, excluded_paths):
         return
 
-    if auth.authorization_header(request) is None and auth.session_cookie(request) is None:
+    if auth.authorization_header(request) is None
+    and auth.session_cookie(request) is None:
         abort(401)
 
     request.current_user = auth.current_user(request)
@@ -43,20 +45,24 @@ def before_request():
     if request.current_user is None:
         abort(403)
 
+
 @app.errorhandler(404)
 def not_found(error):
     """404 Not Found handler."""
     return jsonify({"error": "Not found"}), 404
+
 
 @app.errorhandler(401)
 def unauthorized(error):
     """401 Unauthorized handler."""
     return jsonify({"error": "Unauthorized"}), 401
 
+
 @app.errorhandler(403)
 def forbidden(error):
     """403 Forbidden handler."""
     return jsonify({"error": "Forbidden"}), 403
+
 
 if __name__ == "__main__":
     host = getenv("API_HOST", "0.0.0.0")
